@@ -17,6 +17,11 @@
 #include "logger.h"
 #include "display.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 /**
  * Contains program command line options.
  */
@@ -95,6 +100,11 @@ int main(int argc, char *argv[])
 
     if (alt_proc == true) {
         LOG("Using alternative proc directory: %s\n", options.procfs_loc);
+	int fd = open(options.procfs_loc, O_RDONLY);
+	if(fd == -1){
+		fprintf(stderr, "Invalid proc directory: %s\n", options.procfs_loc);
+		return EXIT_FAILURE;
+	}
     }
 
     if (options.one_shot == true) {
