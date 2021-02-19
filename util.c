@@ -32,6 +32,32 @@ int open_path(char *proc_dir, char *path)
 
 }
 
+char *next_token(char **str_ptr, const char *delim)
+{
+    if(*str_ptr == NULL){
+	    return NULL;
+    }
+    size_t tok_start = strspn(*str_ptr, delim);
+    size_t tok_end = strcspn(*str_ptr + tok_start, delim);
+
+	   
+    if (tok_end  == 0) {
+	 *str_ptr = NULL;
+	  return NULL;
+    }
+   
+    char *current_ptr = *str_ptr + tok_start;
+
+    *str_ptr += tok_start + tok_end;
+
+    if (**str_ptr == '\0') {
+	 *str_ptr = NULL;
+    } else{
+	 **str_ptr ='\0';
+	 (*str_ptr)++;
+    }
+    return current_ptr;
+}
 
 ssize_t lineread(int fd, char *buf, size_t sz)
 { 
