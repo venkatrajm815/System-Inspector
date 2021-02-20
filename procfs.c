@@ -176,6 +176,27 @@ int pfs_format_uptime(double time, char *uptime_buf)
 struct load_avg pfs_load_avg(char *proc_dir)
 {
    struct load_avg lavg = { 0 };
+   int fd = open_path(proc_dir, "loadavg");
+   if(fd == -1){
+	perror("open_path");
+	return lavg;
+   }
+   
+   char line[512] = { 0 };
+   ssize_t read_sz;
+
+   read_sz = lineread(fd, line, 512);
+   if(read_sz == -1){
+	return lavg;
+   }
+   char *tok = line;
+
+   lavg.one = atof(next_token(&tok, " "));
+   lavg.five = atof(next_token(&tok, " "));
+   lavg.fifteen = atof(next_token(&tok, " "));
+   
+   close(fd);
+
    return lavg;
 }
 
