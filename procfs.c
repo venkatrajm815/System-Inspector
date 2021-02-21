@@ -202,7 +202,73 @@ struct load_avg pfs_load_avg(char *proc_dir)
 
 double pfs_cpu_usage(char *proc_dir, struct cpu_stats *prev, struct cpu_stats *curr)
 {
-    return 0.0;
+   
+    LOG("prev idle before read : %li\n", prev->idle);
+    LOG("prev total before read: %li\n", prev->total);
+
+    LOG("curr idle before read : %li\n", curr->idle);
+    LOG("curr total before read : %li\n", curr->total);
+    
+    int fd = open_path(proc_dir, "stat");
+    if(fd == -1){
+	    perror("open_path");
+	    return -1;
+    }
+    char line[512] = { 0 };
+    lineread(fd, line, 512);
+    LOG("Line after read: %s\n", line);
+    char *tok = line;
+
+    //to avoid the 'cpu' at the start
+    next_token(&tok," ");
+
+    //to clear the old values in curr befor reading them in
+    curr->idle = 0;
+    curr->total = 0;
+
+    //adds all numbers in row to total, adds idle number in position four to idle
+    for(int i = 1 ; i < 9 ; i++){
+	char *time = next_token(&tok, " "); 
+	if(i == 4){
+	     curr->idle = atol(time);
+	}
+    	curr->total += atol(time);
+    }
+   
+    LOG("prev idle after read : %li\n", prev->idle);
+    LOG("prev total after read: %li\n", prev->total);
+
+
+    LOG("curr idle after read : %li\n", curr->idle);
+    LOG("curr total after read : %li\n", curr->total);
+      
+    close(fd);
+
+    long int idle_time = curr->idle - prev->idle;
+    if(idle_time < 0){
+	    return 0.0;
+    }
+    LOG("Idle Time : %li\n",idle_time);
+  
+    long int total_time = curr->total - prev->total;
+    if(total_time < 0){
+	    return 0.0;
+    }
+    LOG("Total Time : %li\n",total_time);
+    
+    if((idle_time == 0) && (total_time == 0)){
+	    return 0.0;
+    }
+   
+    double cpu_usage = 1.0 - ((double)(idle_time) / (double)(total_time)); 
+  
+    if(cpu_usage < 0.0){
+	   return 0.0;
+    }
+    LOG("DONE! The CPU usage is : %f\n", cpu_usage * 100);
+ 
+    return cpu_usage;
+
 }
 
 struct mem_stats pfs_mem_usage(char *proc_dir)
