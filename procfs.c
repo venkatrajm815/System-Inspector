@@ -274,6 +274,46 @@ double pfs_cpu_usage(char *proc_dir, struct cpu_stats *prev, struct cpu_stats *c
 struct mem_stats pfs_mem_usage(char *proc_dir)
 {
     struct mem_stats mstats = { 0 };
+    int fd = open_path(proc_dir, "meminfo");
+    if(fd == -1){
+	 perror("open_path");
+	 return mstats;
+    }
+
+    char line[512] = { 0 };
+   
+    ssize_t read_sz;
+    
+    char *search_total = "MemTotal";
+    char *search_avail = "MemAvailable";
+    while((read_sz = lineread(fd, line, 512)) > 0){
+	if(strncmp(line, search_total, strlen(search_total)) == 0){
+	    size_t model_loc = strcspn(line, ":") + 2;
+	    mstats.total = atof(&line[model_loc]) ;
+	}else if(strncmp(line, search_avail, strlen(search_avail)) == 0){
+	    size_t model_loc2 = strcspn(line, ":") + 2;
+	    mstats.used = atof(&line[model_loc2]);
+	}
+
+    }
+  
+    mstats.used = mstats.total - mstats.used; 
+    mstats.used /= (1024 * 1024);
+    mstats.total /= (1024 * 1024);
+
+    double mem_used = mstats.used;
+    double mem_total = mstats.total;
+
+    LOG("Memory Used : %f\n", mem_used);
+    LOG("Memory Total : %f\n", mem_total);
+   
+
+    if(read_sz == -1 ){
+	return mstats;
+    }
+
+    close(fd);
+
     return mstats;
 }
 
