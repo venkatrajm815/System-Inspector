@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "util.h"
 #include "logger.h"
@@ -82,6 +83,41 @@ ssize_t lineread(int fd, char *buf, size_t sz)
 
 void draw_percbar(char *buf, double frac)
 {
+    buf[0] = '\0';
+    int num_signs = 0;
+    LOG("Frac before: %f\n", frac);  
+    char percentage[30];
+    double frac_perc = 100 * frac;
+ 
+    if(frac <= 0.0 || isnan(frac)){
+	 num_signs = 0;
+	 frac_perc = 0.0;
+    }else if(frac >= 1.0){
+	 num_signs = round(1.0 * 100);
+         frac_perc = 100.0;
+    }else{
+	 num_signs = round(frac * 100);
+    }
+
+    LOG("Frac after: %i\n", num_signs);  
+
+    strcat(buf, "["); 
+    for(int i = 1 ; i <= 20 ; i++){
+	   if(i * 5 <= num_signs){
+	  	strcat(buf, "#");	
+	   }else{
+           	strcat(buf, "-");
+	   }
+    } 
+    strcat(buf, "]");
+
+    snprintf(percentage, 30, "%.1f", frac_perc);
+   
+    strcat(buf, " ");
+    strcat(buf, percentage);
+    strcat(buf, "%");
+    
+    buf[strlen(buf) + 1] = '\0';
 
 }
 
