@@ -21,10 +21,10 @@ make
 ```
 ### The Files Included
 There are 5 files included:
-  -Makefile: This is what we use to compile each program together and make sure there are no errors.
-  -procfs.c: This file has all the functions that contains information the System and the hardware such Hostname, Kernel Version, Type of CPU, Uptime, Load Average, CPU Usage, Memory Usage, Number of Tasks, Type of Tasks, and Statistics on the Tasks.
-  -util.c: This file contains all the helper functions taht are used in procfs.c such functions that open a path, retrieve the next token, read a line from file descriptor, draw percentage bar for CPU and memory usage, and finding username from uid.
-  -inspector.c: This is the main driver program which we use to print information to the user such as the example we saw above. It contains different types of options that you can toggle to get the type of output you are looking for.
+  * Makefile: This is what we use to compile each program together and make sure there are no errors.
+  * procfs.c: This file has all the functions that contains information the System and the hardware such Hostname, Kernel Version, Type of CPU, Uptime, Load Average, CPU Usage, Memory Usage, Number of Tasks, Type of Tasks, and Statistics on the Tasks.
+  * util.c: This file contains all the helper functions taht are used in procfs.c such functions that open a path, retrieve the next token, read a line from file descriptor, draw percentage bar for CPU and memory usage, and finding username from uid.
+  * inspector.c: This is the main driver program which we use to print information to the user such as the example we saw above. It contains different types of options that you can toggle to get the type of output you are looking for.
     
 ## How To Build 
 The first thing you need to build the project is get the Ubuntu Terminal for Windows 10 installed.
