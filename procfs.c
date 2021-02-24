@@ -200,6 +200,7 @@ struct load_avg pfs_load_avg(char *proc_dir)
    return lavg;
 }
 
+
 double pfs_cpu_usage(char *proc_dir, struct cpu_stats *prev, struct cpu_stats *curr)
 {
    
@@ -328,7 +329,7 @@ struct task_stats *pfs_create_tstats()
 
 void pfs_destroy_tstats(struct task_stats *tstats)
 {
-
+    free(tstats->active_tasks); 
 }
 
 int pfs_tasks(char *proc_dir, struct task_stats *tstats)
