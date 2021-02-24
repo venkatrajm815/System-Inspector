@@ -5,6 +5,7 @@ This is a Unix utility that is used to inspect the system that it runs and creat
 
 ### Command Line Options
 This options below are used to change the type of information that is display. Here is what it looks like to display the help/usage information:
+```bash
 [vmohan2@jar-jar-vm:~/P1-venkatrajm815]$ ./inspector -h
 Usage: ./inspector [-ho] [-i interval] [-p procfs_dir]
 
@@ -13,12 +14,16 @@ Options:
     * -i interval     Set the update interval (default: 1000ms)
     * -p procfs_dir   Set the expected procfs mount point (default: /proc)
     * -o              Operate in one-shot mode (no curses or live updates)
+```
 To compile and run:
 
 ```bash
 make
 ./inspector
 ```
+### How It Works
+The system and hardware information that we get is from /proc directory. By simplying opening a specific path in the directory that contains the information, we can obtain the information we need by reading line by line using a file descriptor. Each function in procfs.c performs an unique method to get the right information from right location. Some functions are given special keywords to search in a line and are expected to return a value found on that line that corresponds to the information being searched for. Some built in String functions such ststr, strncmp, strcspn, strcat are used to locate the right index or check if a string matches what we are looking for. Tokens are utilized in some functions to allow us to obtain information quicker as we used char arrays to store tokens. For example, we use tokens to find the load average as the path /proc/loadavg contains multiple different numbers on one line. To find out more information on the /proc directory, you can check out 'man proc' which will require you to have installed man pages: pacman -Sy man-pages. Lots of the information that are displayed through this project can be displayed on your system individually by just doing a simple 'cat/proc/...' You can get information about your CPU by doing cat /proc/cpuinfo. 
+
 ### The Files Included
 There are 5 files included:
   * Makefile: This is what we use to compile each program together and make sure there are no errors.
