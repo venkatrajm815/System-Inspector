@@ -21,11 +21,10 @@ make
 ```
 ### The Files Included
 There are 5 files included:
-    -
-    -
-    -
-    -
-    -
+    -Makefile: This is what we use to compile each program together and make sure there are no errors.
+    -procfs.c:
+    -util.c:
+    -inspector.c:
     
 ## How To Build 
 The first thing you need to build the project is get the Ubuntu Terminal for Windows 10 installed.
