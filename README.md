@@ -15,12 +15,7 @@ Options:
     * -p procfs_dir   Set the expected procfs mount point (default: /proc)
     * -o              Operate in one-shot mode (no curses or live updates)
 ```
-To compile and run:
 
-```bash
-make
-./inspector
-```
 ### How It Works
   * The system and hardware information that we get is from /proc directory. By simplying opening a specific path in the directory that contains the information, we can obtain the information we need by reading line by line using a file descriptor. Each function in procfs.c performs an unique method to get the right information from right location. 
   * Some functions are given special keywords to search in a line and are expected to return a value found on that line that corresponds to the information being searched for. Some built in String functions such ststr, strncmp, strcspn, strcat are used to locate the right index or check if a string matches what we are looking for. Tokens are utilized in some functions to allow us to obtain information quicker as we used char arrays to store tokens. For example, we use tokens to find the load average as the path /proc/loadavg contains multiple different numbers on one line. 
@@ -45,7 +40,7 @@ make
 
 # Run the inspector which will display the information on the system
 ./inspector
-You can add extra flags/options to have it display what you want.
+# You can add extra flags/options to have it display what you want such -o,-h, -i, -p.
 ```
 
 ### Program Output
