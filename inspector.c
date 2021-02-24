@@ -39,6 +39,7 @@ void print_usage(char *argv[]);
  *
  * This output is displayed if there are issues with command line option parsing
  * or the user passes in the -h flag.
+ *
  */
 void print_usage(char *argv[])
 {
