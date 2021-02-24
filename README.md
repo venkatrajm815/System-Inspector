@@ -1,12 +1,57 @@
 # Project 1: System Inspector
 
-See: https://www.cs.usfca.edu/~mmalensek/cs326/assignments/project-1.html 
+## About the Project
+This is a Unix utility that is used to inspect the system that it runs and create summarized report for the user. The summarized report includes information such as Hostname, Kernel Version, Type of CPU, Uptime, Load Average, CPU Usage, Memory Usage, Number of Tasks, Type of Tasks, and Statistics on the Tasks. The information is obtained by using proc, the process information pseudo-filesystem.
 
+### Command Line Options
+This options below are used to change the type of information that is display. Here is what it looks like to display the help/usage information:
+[vmohan2@jar-jar-vm:~/P1-venkatrajm815]$ ./inspector -h
+Usage: ./inspector [-ho] [-i interval] [-p procfs_dir]
+
+Options:
+    * -h              Display help/usage information
+    * -i interval     Set the update interval (default: 1000ms)
+    * -p procfs_dir   Set the expected procfs mount point (default: /proc)
+    * -o              Operate in one-shot mode (no curses or live updates)
 To compile and run:
 
 ```bash
 make
 ./inspector
+```
+### The Files Included
+There are 5 files included:
+    -
+    -
+    -
+    -
+    -
+    
+## How To Build 
+The first thing you need to build the project is get the Ubuntu Terminal for Windows 10 installed.
+https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows#0
+After doing that, you will have to Install WSL 2 which will allow you have the Linux environment on Windows.
+Once you have you everything set up, you can clone this repository using either HTTPS or SSH.
+```bash
+# Compile all the files
+make
+
+# Run the inspector which will display the information on the system
+./inspector
+You can add extra flags/options to have it display what you want.
+```
+
+### Program Output
+The project is still work in progress. Everything besides Tasks and Task Statistics are working.
+```bash
+Hostname: jar-jar-vm | Kernel Version: 5.10.11
+CPU: AMD EPYC Processor (with IBPB), Processing Units: 2 
+Uptime: 21 days, 10 hours, 8 minutes, 56 seconds 
+Load Average (1/5/15 min): 0.00 0.00 0.00
+CPU Usage:    [--------------------] 0.0%                                                                 
+Memory Usage: [###-----------------] 16.8% (0.2 / 1.4 GB)                                                                         Tasks: 0 total
+0 running, 0 waiting, 0 sleeping, 0 stopped, 0 zombie                                                                                   PID |                 Task Name |        State |            User  
+----------+---------------------------+--------------+-----------------  
 ```
 
 ## Testing
