@@ -12,6 +12,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+/**
+ * This function opens the path in the proc directory
+ * @param proc_dir This is the path to /proc
+ * @param path     This is the path we use to check within the proc directory
+ *
+ * @returns        Returns a non-negative integer unless there was an error, where it would return -1
+ *
+ */
 int open_path(char *proc_dir, char *path)
 {
     LOG("Opening path: %s/%s\n", proc_dir, path);
@@ -32,6 +40,16 @@ int open_path(char *proc_dir, char *path)
     return fd;
 
 }
+
+/**
+ * Retrieves the next token from a string.
+ *
+ * @param str_ptr Maintains context in the string, i.e., where the next token in the string will be. If the function returns token N, then str_ptr will be updated to point to token N+1. To initialize, declare a char * that points to the string being tokenized. The pointer will be updated after each successive call to next_token.
+ * @param delim   the set of characters to use as delimiters
+ *
+ * @returns       char pointer to the next token in the string.
+ *
+ */
 
 char *next_token(char **str_ptr, const char *delim)
 {
@@ -60,6 +78,15 @@ char *next_token(char **str_ptr, const char *delim)
     return current_ptr;
 }
 
+/**
+ * Reads a line from a file descriptor and copies its contents into a buffer
+ *
+ * @param fd the file descriptor to read from
+ * @param buf where data being read will be copied
+ * @param sz the maximum number of bytes to read
+ *
+ * @return number of bytes read, 0 if EOF is reached, -1 on error
+ */
 ssize_t lineread(int fd, char *buf, size_t sz)
 { 
     size_t count = 0;    
@@ -80,7 +107,12 @@ ssize_t lineread(int fd, char *buf, size_t sz)
     return count;
 }
 
-
+/**
+ * Draws a percentage bar by adding to the buffer and using the frac to fill out the bar
+ * 
+ * @param buf  Destination buffer to copy the bar contents
+ * @param frac the percentage in fraction form that shows how much of the bar to fill out       
+ */
 void draw_percbar(char *buf, double frac)
 {
     buf[0] = '\0';
@@ -121,7 +153,48 @@ void draw_percbar(char *buf, double frac)
 
 }
 
+/**
+ * Finds the username associated with UID, if not found stores the UID as the username
+ *
+ * @param name_buf The buffer we use to copy the username contents found by the uid
+ * @param uid      The identification that we use to locate the username in /etc/passwd
+ *
+ */
 void uid_to_uname(char *name_buf, uid_t uid)
 {
-    strcpy(name_buf, "(UNKNOWN)");
+    int fd = open("/etc/passwd",O_RDONLY);
+    if(fd == -1){
+	    perror("Error Opening File");
+    }
+
+    char line[512] = { 0 };
+    name_buf[0] = '\0'; 
+    ssize_t read_sz;
+    
+    char *search = malloc(30);
+    //LOG("The UID is : %u", uid);
+    sprintf(search, "%u", uid);
+     
+    while((read_sz = lineread(fd, line, 512)) > 0){
+   	 char *next;
+  	 char *first_tok;
+	 char *third_tok;
+
+         next = line;
+	 first_tok = next_token(&next,":");
+	 next_token(&next,":");
+	 third_tok = next_token(&next,":");
+
+	 if(strcmp(search, third_tok) == 0){
+	      LOG("Found it! The username is : %s\n", first_tok);
+	      first_tok[15] = '\0';
+	      strcpy(name_buf, first_tok);
+	      break;
+	 }
+    }
+    if(name_buf[0] == '\0'){
+	   strcpy(name_buf,search);
+    } 
+    free(search); 
+    close(fd);
 }
